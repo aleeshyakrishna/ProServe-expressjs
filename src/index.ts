@@ -1,33 +1,27 @@
-import { Provider, Service, Booking } from "./models";
+import express from "express"
+import { getUserController, createUserController, getAllUserController } from "./controllers/user.controller"
+import { globalErrorHandler } from "./middlewares/error.middleware"
+import cors from "cors"
 
-const provider: Provider = {
-    id: "s0",
-    name: "John Services",
-    email: "john@services.com",
-    role: "PROVIDER",
-    isActive: true,
-    createdAt: new Date(),
-    servicesOffered: ["s1"],
-    rating: 4.5,
-};
+const app = express()
 
-const service: Service = {
-    id: "s1",
-    title: "Home Cleaning",
-    description: "Deep home cleaning service",
-    category: "CLEANING",
-    price: 1500,
-    providerId: provider.id,
-    isAvailable: true,
-};
+app.use(express.json())
 
-const booking: Booking = {
-    id: "b1",
-    userId: "u1",
-    serviceId: service.id,
-    scheduledAt: new Date(),
-    status: "PENDING",
-    createdAt: new Date(),
-};
+// CORS configuration
+app.use(cors({
+    origin: "http://localhost:3000", // Allow requests from this origin
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"] // Allowed headers
+}))
 
-console.log({ provider, service, booking });
+// Route
+app.get("/user/:id", getUserController)
+app.post("/user", createUserController)
+app.get("/users", getAllUserController)
+
+// Global error handler (MUST BE LAST)
+app.use(globalErrorHandler)
+
+app.listen(5000, () => {
+    console.log("Server running on port 5000")
+})
