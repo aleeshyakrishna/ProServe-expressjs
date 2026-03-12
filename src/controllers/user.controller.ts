@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { getUserService, User, createUserService, getAllUserService } from "../services/user.service"
+import { getUserService, User, createUserService, getAllUserService, deleteUserService } from "../services/user.service"
 import { successResponse } from "../utils/response"
 import { AppError } from "../utils/AppError"
 
@@ -32,5 +32,19 @@ export const getAllUserController = async (req: Request, res: Response) => {
     const users: User[] = await getAllUserService()
     return res.status(200).json(
         successResponse(users, "Users fetched successfully")
+    )
+}
+
+export const deleteUserController = async (req: Request, res: Response) => {
+    const { id } = req.params
+    // Implement delete logic here
+    const user: User = await getUserService(Number(id))
+    if (!user) {
+        throw new AppError("User not found", 404)
+    }
+    await deleteUserService(Number(id))
+
+    return res.status(200).json(
+        successResponse(null, "User deleted successfully")
     )
 }

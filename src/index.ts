@@ -2,6 +2,8 @@ import express from "express"
 import { getUserController, createUserController, getAllUserController } from "./controllers/user.controller"
 import { globalErrorHandler } from "./middlewares/error.middleware"
 import cors from "cors"
+import { validate } from "./middlewares/validate.middleware"
+import { createUserSchema } from "./validations/user.schema"
 
 const app = express()
 
@@ -16,7 +18,11 @@ app.use(cors({
 
 // Route
 app.get("/user/:id", getUserController)
-app.post("/user", createUserController)
+app.post(
+    "/user",
+    validate(createUserSchema),
+    createUserController
+)
 app.get("/users", getAllUserController)
 
 // Global error handler (MUST BE LAST)

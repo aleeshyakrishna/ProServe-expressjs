@@ -34,3 +34,13 @@ export const createUserService = async (userData: Omit<User, "id">): Promise<Use
 export const getAllUserService = () => {
     return users;
 }
+
+export const deleteUserService = (id: number) => {
+    const index = users.findIndex(user => user.id === id)
+    if (index !== -1) {
+        users.splice(index, 1)
+    }
+    return;
+}
+
+ex
